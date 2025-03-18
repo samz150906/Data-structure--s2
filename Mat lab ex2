@@ -1,0 +1,38 @@
+import sympy as sp
+
+user_input=input("Enter a mathematical function:")
+x,y=sp.symbols('x y')
+
+f=sp.sympify(user_input)
+
+f_prime_x=sp.diff(f,x)
+f_prime_y=sp.diff(f,y)
+
+critical_point=sp.solve([f_prime_x,f_prime_y],(x,y))
+
+f_double_prime_xx=sp.diff(f_prime_x,x)
+f_double_prime_yy=sp.diff(f_prime_y,y)
+f_double_prime_xy=sp.diff(f_prime_x,y)
+
+extrema=[]
+for point in critical_point:
+    
+    A=f_double_prime_xx.subs({x:point[0],y:point[1]})
+    B=f_double_prime_xy.subs({x:point[0],y:point[1]})
+    C=f_double_prime_yy.subs({x:point[0],y:point[1]})
+    D=A*C-B**2
+    D=D.evalf()
+    if D>0:
+        if f_double_prime_xx.subs({x:point[0],y:point[1]})>0:
+            extrema.append((point,"minima"))
+        elif f_double_prime_xx.subs({x:point[0],y:point[1]})<0:
+            extrema.append((point,"maxima"))
+    elif D <0:
+        extrema.append((point,"saddle Point"))
+    elif D==0:
+        extrema.append((point,"Inconclusive"))
+        
+    else:
+        extrema.append((point,"untermined"))
+
+print("extrema:",extrema)
